@@ -111,17 +111,20 @@
             .attr('d', arc)
             .style('fill', mainColor);
 
-        // Text
-        svg.append('text')
-            .datum(datum)
-            .attr('class', 'meter-center-text')
-            .style('text-anchor', 'middle')
-            .style('fill', mainColor)
-            .text(function(d){
-                return parseFloat(d);
-            })
-            .attr('transform', 'translate(' + 0 + ',' + 20 + ')');
+        var labelField = config['display.visualizations.custom.vmviz_status_gauge.status_gauge.labelField'];
+            linkEl = $('<a class="vm-status-gauge-center-text" href="#" /> ');
+                    linkEl.text(datum + ' ').prependTo(el);
 
+                    linkEl.click(function(e) {
+                        // register drilldown handler
+                        e.preventDefault();
+                        var payload = {
+                            action: SplunkVisualizationBase.FIELD_VALUE_DRILLDOWN,
+                            data: {}
+                        };
+                        payload.data[labelField] = '$.trim("*")';
+                        this.drilldown(payload);
+                    }.bind(this));
         }
      });
  });
